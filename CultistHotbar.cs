@@ -9,8 +9,6 @@ namespace CultistHotbar
     [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.CultistHotbar", "CultistHotbar", "0.0.1")]
     public class CultistHotbarMod : BepInEx.BaseUnityPlugin
     {
-        private bool _keyPressLatch = false;
-
         readonly KeyCode[] HotbarKeys = new KeyCode[] {
             KeyCode.Alpha1,
             KeyCode.Alpha2,
@@ -22,6 +20,15 @@ namespace CultistHotbar
             KeyCode.Alpha8,
             KeyCode.Alpha9,
             KeyCode.Alpha0
+        };
+
+        readonly HashSet<string> PrimarySituations = new HashSet<string>() {
+            "dream",
+            "work",
+            "study",
+            "time",
+            "explore",
+            "talk"
         };
 
         private TabletopTokenContainer TabletopTokenContainer
@@ -52,20 +59,16 @@ namespace CultistHotbar
                 var key = HotbarKeys[i];
                 if (Input.GetKeyDown(key))
                 {
-                    if (!this._keyPressLatch)
-                    {
-                        this._keyPressLatch = true;
-                        this.SelectHotbarSituation(i);
-                    }
+                    var secondarySituations = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+                    this.SelectHotbarSituation(i, secondarySituations);
 
                     // A key was pressed, so bail without resetting key latch.
                     return;
                 }
             }
-            this._keyPressLatch = false;
         }
 
-        void SelectHotbarSituation(int index)
+        void SelectHotbarSituation(int index, bool targetSecondarySituations)
         {
             if (TabletopManager.IsInMansus())
             {
@@ -74,6 +77,7 @@ namespace CultistHotbar
 
             var hotbarSituations =
                 from situation in this.GetAllSituations()
+                where PrimarySituations.Contains(situation.EntityId) != targetSecondarySituations
                 orderby situation.RectTransform.position.x
                 select situation;
 
