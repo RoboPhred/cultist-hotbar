@@ -1,13 +1,13 @@
 # Cultist Hotbar
 
-This is a mod for Cultist Simulator that adds the ability to select Situations with the numeric keys.
+This is a mod for Cultist Simulator that adds the ability to select situations with the numeric keys.
 
 Download the latest release [here](https://github.com/RoboPhred/cultist-hotbar/releases/).
 
 ## Usage
 
 Once the mod is installed, pressing the number keys (1 to 9) will select a Primary Situation based on the order they are layed out on the table.
-A Primary Situation is defined as a Situation that is available throughout the game and does not appear or dissapear under normal circumstances.
+A Primary Situation is defined as a situation that is available throughout the game and does not appear or dissapear under normal circumstances.
 The Primary Situations are
 - Dream
 - Work
@@ -16,18 +16,18 @@ The Primary Situations are
 - Talk
 - Time
 
-Hitting Shift and a number key will select from Secondary Situation.  Use this to select Situations like Influences, Visions, Dread, Investigation, and so on.
+Hitting Shift and a number key will select from Secondary Situations.  Use this to select situations like Influences, Visions, Dread, Investigation, and so on.
 When Shift is held, the hotkeys are still ordered from left to right, but now only include these additional influences.
 
 
-The order the Situations are selected in is determined by the order you have placed them on the table, starting with the far left and moving to the right.
-For example, pressing `1` will select the left-most Situation, `2` will select the second-to-left Situation, and so on.
-Any time Situations are reordered, their hotkeys will be updated to reflect this.
+The order the situations are selected in is determined by the order you have placed them on the table, starting with the far left and moving to the right.
+For example, pressing `1` will select the left-most situation, `2` will select the second-to-left situation, and so on.
+Any time situations are reordered, their hotkeys will be updated to reflect this.
 
 Note that by default, the game binds keys `1`, `2`, and `3` to Zoom Level 1, Zoom Level 2, and Zoom Level 3.  For best results, change these bindings so they
 do not conflict with this mod.  You can do so by selecting the Input tab on the Cultist Simulator launcher.
 
-Pressing the number of a Situation while it is open will cause it to close again.
+Pressing the number of a situation while it is open will cause it to close again.
 
 ## Installation
 
