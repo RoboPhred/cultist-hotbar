@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CultistHotbar
 {
-    [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.CultistHotbar", "CultistHotbar", "0.0.1")]
+    [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.CultistHotbar", "CultistHotbar", "0.0.2")]
     public class CultistHotbarMod : BepInEx.BaseUnityPlugin
     {
         readonly KeyCode[] HotbarKeys = new KeyCode[] {
