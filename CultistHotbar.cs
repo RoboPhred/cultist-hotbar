@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.CS.TabletopUI;
-using TabletopUi.Scripts.Interfaces;
 using UnityEngine;
 
 namespace CultistHotbar
 {
-    [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.CultistHotbar", "CultistHotbar", "0.0.2")]
+    [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.CultistHotbar", "CultistHotbar", "1.0.1")]
     public class CultistHotbarMod : BepInEx.BaseUnityPlugin
     {
         readonly KeyCode[] HotbarKeys = new KeyCode[] {
@@ -36,7 +35,7 @@ namespace CultistHotbar
             get
             {
                 {
-                    var tabletopManager = (TabletopManager)Registry.Retrieve<ITabletopManager>();
+                    var tabletopManager = Registry.Get<TabletopManager>();
                     if (tabletopManager == null)
                     {
                         this.Logger.LogError("Could not fetch TabletopManager");

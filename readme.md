@@ -4,6 +4,10 @@ This is a mod for Cultist Simulator that adds the ability to select situations w
 
 Download the latest release [here](https://github.com/RoboPhred/cultist-hotbar/releases/).
 
+## Supported versions
+
+This mod supports Cultist Simulator `2021.1.b.2`.
+
 ## Usage
 
 Once the mod is installed, pressing the number keys (1 to 9) will select a Primary Situation based on the order they are layed out on the table.
