@@ -1,27 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Assets.CS.TabletopUI;
+using SecretHistories.Entities;
+using SecretHistories.Enums;
+using SecretHistories.Spheres;
+using SecretHistories.Fucine;
+using SecretHistories.UI;
+using SecretHistories.Services;
+using UnityEngine.InputSystem;
 using UnityEngine;
 
-namespace CultistHotbar
+public class CultistHotbar : MonoBehaviour
 {
-    [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.CultistHotbar", "CultistHotbar", "1.0.1")]
-    public class CultistHotbarMod : BepInEx.BaseUnityPlugin
-    {
-        readonly KeyCode[] HotbarKeys = new KeyCode[] {
-            KeyCode.Alpha1,
-            KeyCode.Alpha2,
-            KeyCode.Alpha3,
-            KeyCode.Alpha4,
-            KeyCode.Alpha5,
-            KeyCode.Alpha6,
-            KeyCode.Alpha7,
-            KeyCode.Alpha8,
-            KeyCode.Alpha9,
-            KeyCode.Alpha0
+    readonly Key[] HotbarKeys = new Key[] {
+            Key.Digit1,
+            Key.Digit2,
+            Key.Digit3,
+            Key.Digit4,
+            Key.Digit5,
+            Key.Digit6,
+            Key.Digit7,
+            Key.Digit8,
+            Key.Digit9,
+            Key.Digit0
         };
 
-        readonly HashSet<string> PrimarySituations = new HashSet<string>() {
+    readonly HashSet<string> PrimarySituations = new HashSet<string>() {
             "dream",
             "work",
             "study",
@@ -30,82 +34,78 @@ namespace CultistHotbar
             "talk"
         };
 
-        private TabletopTokenContainer TabletopTokenContainer
+    public static void Initialise()
+    {
+        try
         {
-            get
-            {
-                {
-                    var tabletopManager = Registry.Get<TabletopManager>();
-                    if (tabletopManager == null)
-                    {
-                        this.Logger.LogError("Could not fetch TabletopManager");
-                    }
-
-                    return tabletopManager._tabletop;
-                }
-            }
+            NoonUtility.LogWarning($"HotBar intitializing");
+            new GameObject().AddComponent<CultistHotbar>();
         }
-
-        void Start()
+        catch (Exception e)
         {
-            this.Logger.LogInfo("CultistHotbar initialized.");
+            NoonUtility.LogException(e);
         }
+    }
 
-        void Update()
+    void Start()
+    {
+    }
+
+    void Update()
+    {
+        try
         {
             for (var i = 0; i < HotbarKeys.Length; i++)
             {
                 var key = HotbarKeys[i];
-                if (Input.GetKeyDown(key))
+                if (Keyboard.current[key].wasPressedThisFrame)
                 {
-                    var secondarySituations = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-                    this.SelectHotbarSituation(i, secondarySituations);
+                    NoonUtility.Log($"Hotbar key {key} down");
+                    var secondarySituations = Keyboard.current[Key.LeftShift].IsPressed() || Keyboard.current[Key.RightShift].IsPressed();
 
-                    // A key was pressed, so bail without resetting key latch.
+                    NoonUtility.Log($"Hotbar key {key} pressed, selecting situation {i} (secondary: {secondarySituations})");
+                    this.SelectHotbarSituation(i, secondarySituations);
                     return;
                 }
             }
         }
-
-        void SelectHotbarSituation(int index, bool targetSecondarySituations)
+        catch (Exception ex)
         {
-            if (TabletopManager.IsInMansus())
-            {
-                return;
-            }
+            NoonUtility.LogException(ex);
+        }
+    }
 
-            var hotbarSituations =
-                from situation in this.GetAllSituations()
-                where PrimarySituations.Contains(situation.EntityId) != targetSecondarySituations
-                orderby situation.RectTransform.position.x
-                select situation;
-
-            var targetSituation = hotbarSituations.Skip(index).FirstOrDefault();
-            if (!targetSituation)
-            {
-                return;
-            }
-
-            if (targetSituation.SituationController.IsOpen)
-            {
-                targetSituation.SituationController.CloseWindow();
-            }
-            else
-            {
-                targetSituation.SituationController.OpenWindow();
-            }
+    void SelectHotbarSituation(int index, bool targetSecondarySituations)
+    {
+        if (Watchman.Get<Numa>().IsOtherworldActive())
+        {
+            return;
         }
 
-        IEnumerable<SituationToken> GetAllSituations()
+        var hotbarSituations =
+            from situation in this.GetAllSituations()
+            where PrimarySituations.Contains(situation.VerbId) != targetSecondarySituations
+            orderby situation.GetRectTransform().position.x
+            select situation;
+
+        var targetSituation = hotbarSituations.Skip(index).FirstOrDefault();
+        if (targetSituation == null)
         {
-            foreach (var token in TabletopTokenContainer.GetTokens())
-            {
-                var situationToken = token as SituationToken;
-                if (situationToken != null)
-                {
-                    yield return situationToken;
-                }
-            }
+            return;
         }
+
+        if (targetSituation.IsOpen)
+        {
+            targetSituation.Close();
+        }
+        else
+        {
+            targetSituation.OpenAt(targetSituation.Token.Location);
+        }
+    }
+
+    IEnumerable<Situation> GetAllSituations()
+    {
+        return Watchman.Get<HornedAxe>().GetRegisteredSituations();
     }
 }
