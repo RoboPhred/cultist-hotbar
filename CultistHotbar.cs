@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SecretHistories.Entities;
-using SecretHistories.Enums;
-using SecretHistories.Spheres;
-using SecretHistories.Fucine;
 using SecretHistories.UI;
-using SecretHistories.Services;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
